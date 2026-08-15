@@ -4,9 +4,9 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
-	"physio-booking/backend/internal/db"
-	"physio-booking/backend/internal/notifications"
-	"physio-booking/backend/internal/server"
+	"fisiodar/backend/internal/db"
+	"fisiodar/backend/internal/notifications"
+	"fisiodar/backend/internal/server"
 )
 
 func main() {
@@ -14,7 +14,7 @@ func main() {
 	// We ignore error since we may configure via native system env variables in production
 	_ = godotenv.Load()
 
-	log.Println("Starting PhysioReserve backend service...")
+	log.Println("Starting Fisiodar backend service...")
 
 	// 1. Initialize PostgreSQL database connection pool
 	pool, err := db.InitDB()

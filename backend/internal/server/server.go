@@ -59,7 +59,7 @@ func (s *Server) setupRoutes() {
 	// Health check endpoint
 	s.Router.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"status":"ok","message":"PhysioReserve API is healthy"}`))
+		w.Write([]byte(`{"status":"ok","message":"Fisiodar API is healthy"}`))
 	})
 
 	// Mount API routes
@@ -79,6 +79,6 @@ func (s *Server) Start() error {
 	}
 
 	addr := fmt.Sprintf(":%s", port)
-	fmt.Printf("PhysioReserve API is starting on port %s...\n", port)
+	fmt.Printf("Fisiodar API is starting on port %s...\n", port)
 	return http.ListenAndServe(addr, s.Router)
 }

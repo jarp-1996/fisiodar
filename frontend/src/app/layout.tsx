@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PhysioReserve - Booking & Fisioterapia",
+  title: "Fisiodar - Booking & Fisioterapia",
   description: "Plataforma profesional para reservas de turnos e historial clínico.",
 };
 

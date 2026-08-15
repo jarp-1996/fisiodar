@@ -41,7 +41,7 @@ export default function Home() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
               <span className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-emerald-500 bg-clip-text text-transparent">
-                PhysioReserve
+                Fisiodar
               </span>
               <span className="bg-teal-500/10 text-teal-400 text-xs px-2 py-0.5 rounded-full font-semibold border border-teal-500/20">
                 Clinic
@@ -197,7 +197,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-500 text-sm">
-          <p>&copy; {new Date().getFullYear()} PhysioReserve. Todos los derechos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Fisiodar. Todos los derechos reservados.</p>
           <p className="flex items-center gap-2">
             Desarrollado con <span className="text-rose-500 font-semibold">❤️</span> usando Go & Next.js
           </p>

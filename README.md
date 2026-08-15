@@ -1,6 +1,6 @@
-# PhysioReserve 🏥
+# Fisiodar 🏥
 
-Sistema de gestión y reserva de turnos para un Centro de Fisioterapia. Este proyecto está diseñado para demostrar habilidades como desarrollador Fullstack usando un backend robusto en Go y un frontend interactivo y optimizado en Next.js/React.
+Sistema de gestión y reserva de turnos para el centro de fisioterapia Fisiodar. Este proyecto está diseñado para demostrar habilidades como desarrollador Fullstack usando un backend robusto en Go y un frontend interactivo y optimizado en Next.js/React.
 
 ## 🛠️ Stack Tecnológico
 

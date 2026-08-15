@@ -165,7 +165,7 @@ export default function PatientDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xl font-bold bg-gradient-to-r from-teal-400 to-emerald-500 bg-clip-text text-transparent">
-              PhysioReserve
+              Fisiodar
             </span>
             <span className="bg-teal-500/10 text-teal-400 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-teal-500/20">
               Paciente
