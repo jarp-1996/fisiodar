@@ -64,12 +64,14 @@ export default function PatientDashboard() {
   useEffect(() => {
     if (!user || user.role !== 'patient') return;
 
+    const patientId = user.id;
+
     async function loadDashboardData() {
       try {
         const [apptsData, therapistsData, recordsData] = await Promise.all([
           api.get<Appointment[]>('/appointments'),
           api.get<Therapist[]>('/users/therapists'),
-          api.get<MedicalRecord[]>(`/records/patient/${user.id}`),
+          api.get<MedicalRecord[]>(`/records/patient/${patientId}`),
         ]);
 
         setAppointments(apptsData);

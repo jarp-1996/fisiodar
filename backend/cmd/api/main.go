@@ -5,6 +5,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"physio-booking/backend/internal/db"
+	"physio-booking/backend/internal/notifications"
 	"physio-booking/backend/internal/server"
 )
 
@@ -33,6 +34,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Seeding database failed: %v", err)
 	}
+
+	// 3.5 Start background notification worker
+	worker := notifications.NewNotificationWorker(pool)
+	worker.Start()
+	defer worker.Stop()
 
 	// 4. Create and start the HTTP server
 	srv := server.NewServer(pool)
