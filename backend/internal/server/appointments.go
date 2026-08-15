@@ -13,6 +13,9 @@ type CreateAppointmentRequest struct {
 	TherapistID     string    `json:"therapist_id"`
 	AppointmentTime time.Time `json:"appointment_time"`
 	Notes           string    `json:"notes"`
+	ServiceType     string    `json:"service_type"`
+	PainScale       int       `json:"pain_scale"`
+	Symptoms        string    `json:"symptoms"`
 }
 
 type UpdateStatusRequest struct {
@@ -28,6 +31,9 @@ type AppointmentResponse struct {
 	AppointmentTime time.Time `json:"appointment_time"`
 	Status          string    `json:"status"`
 	Notes           string    `json:"notes"`
+	ServiceType     string    `json:"service_type"`
+	PainScale       int       `json:"pain_scale"`
+	Symptoms        string    `json:"symptoms"`
 	CreatedAt       time.Time `json:"created_at"`
 }
 
@@ -55,8 +61,13 @@ func (s *Server) handleCreateAppointment(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if req.TherapistID == "" || req.AppointmentTime.IsZero() {
-		http.Error(w, "Therapist ID and appointment time are required", http.StatusBadRequest)
+	if req.TherapistID == "" || req.AppointmentTime.IsZero() || req.ServiceType == "" {
+		http.Error(w, "Therapist ID, service type and appointment time are required", http.StatusBadRequest)
+		return
+	}
+
+	if req.PainScale < 1 || req.PainScale > 10 {
+		http.Error(w, "Pain scale must be between 1 and 10", http.StatusBadRequest)
 		return
 	}
 
@@ -100,16 +111,19 @@ func (s *Server) handleCreateAppointment(w http.ResponseWriter, r *http.Request)
 	var appointment AppointmentResponse
 
 	err = s.DB.QueryRow(ctx, `
-		INSERT INTO appointments (patient_id, therapist_id, appointment_time, notes)
-		VALUES ($1, $2, $3, $4)
-		RETURNING id, patient_id, therapist_id, appointment_time, status, notes, created_at
-	`, patientID, req.TherapistID, req.AppointmentTime, req.Notes).Scan(
+		INSERT INTO appointments (patient_id, therapist_id, appointment_time, notes, service_type, pain_scale, symptoms)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		RETURNING id, patient_id, therapist_id, appointment_time, status, notes, service_type, pain_scale, symptoms, created_at
+	`, patientID, req.TherapistID, req.AppointmentTime, req.Notes, req.ServiceType, req.PainScale, req.Symptoms).Scan(
 		&appointment.ID,
 		&appointment.PatientID,
 		&appointment.TherapistID,
 		&appointment.AppointmentTime,
 		&appointment.Status,
 		&appointment.Notes,
+		&appointment.ServiceType,
+		&appointment.PainScale,
+		&appointment.Symptoms,
 		&appointment.CreatedAt,
 	)
 
@@ -136,7 +150,7 @@ func (s *Server) handleGetAppointments(w http.ResponseWriter, r *http.Request) {
 		rowsQuery = `
 			SELECT a.id, a.patient_id, u_pat.first_name || ' ' || u_pat.last_name, 
 			       a.therapist_id, u_ther.first_name || ' ' || u_ther.last_name, 
-			       a.appointment_time, a.status, a.notes, a.created_at
+			       a.appointment_time, a.status, a.notes, a.service_type, a.pain_scale, a.symptoms, a.created_at
 			FROM appointments a
 			JOIN users u_pat ON a.patient_id = u_pat.id
 			JOIN users u_ther ON a.therapist_id = u_ther.id
@@ -148,7 +162,7 @@ func (s *Server) handleGetAppointments(w http.ResponseWriter, r *http.Request) {
 		rowsQuery = `
 			SELECT a.id, a.patient_id, u_pat.first_name || ' ' || u_pat.last_name, 
 			       a.therapist_id, u_ther.first_name || ' ' || u_ther.last_name, 
-			       a.appointment_time, a.status, a.notes, a.created_at
+			       a.appointment_time, a.status, a.notes, a.service_type, a.pain_scale, a.symptoms, a.created_at
 			FROM appointments a
 			JOIN users u_pat ON a.patient_id = u_pat.id
 			JOIN users u_ther ON a.therapist_id = u_ther.id
@@ -161,7 +175,7 @@ func (s *Server) handleGetAppointments(w http.ResponseWriter, r *http.Request) {
 		rowsQuery = `
 			SELECT a.id, a.patient_id, u_pat.first_name || ' ' || u_pat.last_name, 
 			       a.therapist_id, u_ther.first_name || ' ' || u_ther.last_name, 
-			       a.appointment_time, a.status, a.notes, a.created_at
+			       a.appointment_time, a.status, a.notes, a.service_type, a.pain_scale, a.symptoms, a.created_at
 			FROM appointments a
 			JOIN users u_pat ON a.patient_id = u_pat.id
 			JOIN users u_ther ON a.therapist_id = u_ther.id
@@ -183,7 +197,8 @@ func (s *Server) handleGetAppointments(w http.ResponseWriter, r *http.Request) {
 		err := rows.Scan(
 			&a.ID, &a.PatientID, &a.PatientName,
 			&a.TherapistID, &a.TherapistName,
-			&a.AppointmentTime, &a.Status, &a.Notes, &a.CreatedAt,
+			&a.AppointmentTime, &a.Status, &a.Notes,
+			&a.ServiceType, &a.PainScale, &a.Symptoms, &a.CreatedAt,
 		)
 		if err != nil {
 			log.Printf("Failed to scan appointment row: %v", err)

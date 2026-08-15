@@ -11,6 +11,8 @@ export interface User {
   last_name: string;
   phone: string;
   role: 'patient' | 'therapist' | 'admin';
+  weight?: number;
+  medical_history?: string;
 }
 
 interface AuthContextType {
@@ -22,7 +24,9 @@ interface AuthContextType {
     password: string,
     firstName: string,
     lastName: string,
-    phone: string
+    phone: string,
+    weight?: number,
+    medicalHistory?: string
   ) => Promise<void>;
   logout: () => void;
 }
@@ -89,7 +93,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     firstName: string,
     lastName: string,
-    phone: string
+    phone: string,
+    weight?: number,
+    medicalHistory?: string
   ) => {
     setLoading(true);
     try {
@@ -99,6 +105,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         first_name: firstName,
         last_name: lastName,
         phone,
+        weight: weight ? Number(weight) : undefined,
+        medical_history: medicalHistory || undefined,
       });
 
       localStorage.setItem('token', response.token);

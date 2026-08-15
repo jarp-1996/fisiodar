@@ -35,7 +35,7 @@ func SeedDatabase(pool *pgxpool.Pool) error {
 		Role      string
 	}{
 		{"admin@physio.com", "admin123", "Admin", "User", "123456789", "admin"},
-		{"therapist@physio.com", "therapist123", "Carlos", "Kinesiologo", "987654321", "therapist"},
+		{"therapist@physio.com", "therapist123", "Dariana", "Fisioterapeuta", "958108389", "therapist"},
 		{"patient@physio.com", "patient123", "Maria", "Gomez", "555123456", "patient"},
 	}
 

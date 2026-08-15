@@ -24,11 +24,13 @@ func getEnv(key, fallback string) string {
 
 // Request and Response Structs
 type RegisterRequest struct {
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Phone     string `json:"phone"`
+	Email          string   `json:"email"`
+	Password       string   `json:"password"`
+	FirstName      string   `json:"first_name"`
+	LastName       string   `json:"last_name"`
+	Phone          string   `json:"phone"`
+	Weight         *float64 `json:"weight,omitempty"`
+	MedicalHistory *string  `json:"medical_history,omitempty"`
 }
 
 type LoginRequest struct {
@@ -37,12 +39,14 @@ type LoginRequest struct {
 }
 
 type UserResponse struct {
-	ID        string `json:"id"`
-	Email     string `json:"email"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Phone     string `json:"phone"`
-	Role      string `json:"role"`
+	ID             string   `json:"id"`
+	Email          string   `json:"email"`
+	FirstName      string   `json:"first_name"`
+	LastName       string   `json:"last_name"`
+	Phone          string   `json:"phone"`
+	Role           string   `json:"role"`
+	Weight         *float64 `json:"weight,omitempty"`
+	MedicalHistory *string  `json:"medical_history,omitempty"`
 }
 
 type AuthResponse struct {
@@ -100,11 +104,11 @@ func (s *Server) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	// Insert into DB
 	err = s.DB.QueryRow(ctx, `
-		INSERT INTO users (email, password_hash, first_name, last_name, phone, role)
-		VALUES ($1, $2, $3, $4, $5, $6)
-		RETURNING id, email, first_name, last_name, phone, role
-	`, req.Email, string(hashedBytes), req.FirstName, req.LastName, req.Phone, role).
-		Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Phone, &user.Role)
+		INSERT INTO users (email, password_hash, first_name, last_name, phone, role, weight, medical_history)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING id, email, first_name, last_name, phone, role, weight, medical_history
+	`, req.Email, string(hashedBytes), req.FirstName, req.LastName, req.Phone, role, req.Weight, req.MedicalHistory).
+		Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Phone, &user.Role, &user.Weight, &user.MedicalHistory)
 
 	if err != nil {
 		// Handle duplicate email violation
@@ -148,10 +152,10 @@ func (s *Server) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch user details and password hash from database
 	err = s.DB.QueryRow(ctx, `
-		SELECT id, email, password_hash, first_name, last_name, phone, role
+		SELECT id, email, password_hash, first_name, last_name, phone, role, weight, medical_history
 		FROM users
 		WHERE email = $1
-	`, req.Email).Scan(&user.ID, &user.Email, &passwordHash, &user.FirstName, &user.LastName, &user.Phone, &user.Role)
+	`, req.Email).Scan(&user.ID, &user.Email, &passwordHash, &user.FirstName, &user.LastName, &user.Phone, &user.Role, &user.Weight, &user.MedicalHistory)
 
 	if err != nil {
 		// User not found or DB error

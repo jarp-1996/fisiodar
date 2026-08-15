@@ -29,10 +29,10 @@ func (s *Server) handleGetMe(w http.ResponseWriter, r *http.Request) {
 
 	var u UserResponse
 	err := s.DB.QueryRow(ctx, `
-		SELECT id, email, first_name, last_name, phone, role
+		SELECT id, email, first_name, last_name, phone, role, weight, medical_history
 		FROM users
 		WHERE id = $1
-	`, user.UserID).Scan(&u.ID, &u.Email, &u.FirstName, &u.LastName, &u.Phone, &u.Role)
+	`, user.UserID).Scan(&u.ID, &u.Email, &u.FirstName, &u.LastName, &u.Phone, &u.Role, &u.Weight, &u.MedicalHistory)
 
 	if err != nil {
 		http.Error(w, "User not found", http.StatusNotFound)
@@ -79,7 +79,7 @@ func (s *Server) handleGetPatients(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	rows, err := s.DB.Query(ctx, `
-		SELECT id, email, first_name, last_name, phone, role
+		SELECT id, email, first_name, last_name, phone, role, weight, medical_history
 		FROM users
 		WHERE role = 'patient'
 		ORDER BY first_name ASC
@@ -94,7 +94,7 @@ func (s *Server) handleGetPatients(w http.ResponseWriter, r *http.Request) {
 	patients := []UserResponse{}
 	for rows.Next() {
 		var u UserResponse
-		err := rows.Scan(&u.ID, &u.Email, &u.FirstName, &u.LastName, &u.Phone, &u.Role)
+		err := rows.Scan(&u.ID, &u.Email, &u.FirstName, &u.LastName, &u.Phone, &u.Role, &u.Weight, &u.MedicalHistory)
 		if err != nil {
 			log.Printf("Failed to scan patient: %v", err)
 			http.Error(w, "Database error", http.StatusInternalServerError)

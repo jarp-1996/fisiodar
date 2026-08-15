@@ -10,6 +10,8 @@ interface Patient {
   first_name: string;
   last_name: string;
   email: string;
+  weight?: number;
+  medical_history?: string;
 }
 
 interface Appointment {
@@ -21,6 +23,9 @@ interface Appointment {
   appointment_time: string;
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   notes: string;
+  service_type: string;
+  pain_scale: number;
+  symptoms: string;
   created_at: string;
 }
 
@@ -222,10 +227,20 @@ export default function TherapistDashboard() {
                           <p className="text-xs text-slate-400 capitalize">
                             {formattedDate} - {formattedTime} hs
                           </p>
-                          
+                          <p className="text-xs text-slate-455 mt-1">
+                            Servicio: <span className="text-teal-400 font-semibold">{appt.service_type}</span>
+                          </p>
+                          <p className="text-xs text-slate-455">
+                            Nivel de dolor: <span className="text-amber-450 font-semibold">{appt.pain_scale}/10</span>
+                          </p>
+                          {appt.symptoms && (
+                            <p className="text-xs text-slate-500 mt-1.5 italic leading-relaxed">
+                              Síntomas: &quot;{appt.symptoms}&quot;
+                            </p>
+                          )}
                           {appt.notes && (
-                            <p className="text-xs text-slate-500 italic mt-2">
-                              Motivo consulta: &quot;{appt.notes}&quot;
+                            <p className="text-xs text-slate-500 italic mt-1 leading-relaxed">
+                              Notas: &quot;{appt.notes}&quot;
                             </p>
                           )}
                         </div>
@@ -310,6 +325,19 @@ export default function TherapistDashboard() {
                       </option>
                     ))}
                   </select>
+
+                  {/* Mostrar Datos Médicos del Paciente Seleccionado */}
+                  {(() => {
+                    const selectedPatientObj = patients.find(p => p.id === selectedPatientId);
+                    if (!selectedPatientObj) return null;
+                    return (
+                       <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 text-xs space-y-2 mt-3 text-slate-300">
+                         <p className="font-bold text-teal-400">Ficha del Paciente:</p>
+                         <p><span className="text-slate-500">Peso:</span> {selectedPatientObj.weight ? `${selectedPatientObj.weight} kg` : 'No registrado'}</p>
+                         <p className="leading-relaxed whitespace-pre-wrap"><span className="text-slate-500">Condiciones/Operaciones:</span> {selectedPatientObj.medical_history || 'Sin antecedentes.'}</p>
+                       </div>
+                    );
+                  })()}
                 </div>
 
                 <div>

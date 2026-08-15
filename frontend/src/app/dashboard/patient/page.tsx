@@ -21,6 +21,9 @@ interface Appointment {
   appointment_time: string;
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   notes: string;
+  service_type: string;
+  pain_scale: number;
+  symptoms: string;
   created_at: string;
 }
 
@@ -44,6 +47,9 @@ export default function PatientDashboard() {
   const [therapistId, setTherapistId] = useState('');
   const [appointmentDate, setAppointmentDate] = useState('');
   const [appointmentTime, setAppointmentTime] = useState('');
+  const [serviceType, setServiceType] = useState('');
+  const [painScale, setPainScale] = useState(5);
+  const [symptoms, setSymptoms] = useState('');
   const [notes, setNotes] = useState('');
   
   const [fetching, setFetching] = useState(true);
@@ -92,20 +98,48 @@ export default function PatientDashboard() {
     setError(null);
     setSuccessMsg(null);
 
-    if (!therapistId || !appointmentDate || !appointmentTime) {
+    if (!therapistId || !appointmentDate || !appointmentTime || !serviceType) {
       setError('Por favor, completa todos los campos del turno');
+      return;
+    }
+
+    const fullDateTime = new Date(`${appointmentDate}T${appointmentTime}:00`);
+    const dayOfWeek = fullDateTime.getDay(); // 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday
+
+    // Validate days: only Mon (1), Wed (3), Fri (5)
+    if (dayOfWeek !== 1 && dayOfWeek !== 3 && dayOfWeek !== 5) {
+      setError('El horario de atención es únicamente lunes, miércoles y viernes. Para domingos por favor consulta directamente.');
+      return;
+    }
+
+    const hours = fullDateTime.getHours();
+    const minutes = fullDateTime.getMinutes();
+    const timeInMinutes = hours * 60 + minutes;
+
+    const startOfWork = 8 * 60; // 8:00 AM
+    const endOfWork = 20 * 60; // 8:00 PM
+    const lunchStart = 13 * 60; // 1:00 PM
+    const lunchEnd = 14 * 60; // 2:00 PM
+
+    if (timeInMinutes < startOfWork || timeInMinutes > endOfWork) {
+      setError('El horario de atención es de 8:00 AM a 8:00 PM.');
+      return;
+    }
+
+    if (timeInMinutes >= lunchStart && timeInMinutes < lunchEnd) {
+      setError('El personal se encuentra en su horario de almuerzo de 1:00 PM a 2:00 PM.');
       return;
     }
 
     setBookingLoading(true);
     try {
-      // Merge date and time into RFC3339 ISO string
-      const fullDateTime = new Date(`${appointmentDate}T${appointmentTime}:00`);
-      
       const newAppt = await api.post<Appointment>('/appointments', {
         therapist_id: therapistId,
         appointment_time: fullDateTime.toISOString(),
         notes,
+        service_type: serviceType,
+        pain_scale: Number(painScale),
+        symptoms,
       });
 
       // Find therapist name for UI rendering
@@ -114,7 +148,7 @@ export default function PatientDashboard() {
         ...newAppt,
         therapist_name: selectedTherapist 
           ? `${selectedTherapist.first_name} ${selectedTherapist.last_name}` 
-          : 'Kinesiólogo',
+          : 'Dariana Fisioterapeuta',
       };
 
       setAppointments(prev => [...prev, apptWithTherapistName]);
@@ -124,6 +158,9 @@ export default function PatientDashboard() {
       setTherapistId('');
       setAppointmentDate('');
       setAppointmentTime('');
+      setServiceType('');
+      setPainScale(5);
+      setSymptoms('');
       setNotes('');
     } catch (err: any) {
       setError(err.message || 'Error al reservar el turno');
@@ -192,6 +229,25 @@ export default function PatientDashboard() {
           
           {/* Left Column: Appointments & History */}
           <div className="lg:col-span-2 space-y-10">
+
+            {/* Ficha Médica del Paciente */}
+            <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 sm:p-8">
+              <h2 className="text-xl font-bold text-slate-100 mb-4 flex items-center gap-2">
+                📋 Mi Ficha de Paciente
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-300">
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-850">
+                  <span className="text-xs text-slate-500 block mb-1">Peso Registrado</span>
+                  <span className="font-semibold text-teal-400">{user.weight ? `${user.weight} kg` : 'No registrado'}</span>
+                </div>
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-850">
+                  <span className="text-xs text-slate-500 block mb-1">Condiciones Médicas / Antecedentes</span>
+                  <p className="mt-1 text-xs text-slate-400 leading-relaxed max-h-20 overflow-y-auto whitespace-pre-wrap">
+                    {user.medical_history || 'Sin antecedentes médicos registrados.'}
+                  </p>
+                </div>
+              </div>
+            </div>
             
             {/* Appointments Section */}
             <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 sm:p-8">
@@ -231,9 +287,20 @@ export default function PatientDashboard() {
                           <p className="text-xs text-slate-400 capitalize">
                             {formattedDate} - {formattedTime} hs
                           </p>
+                          <p className="text-xs text-slate-450 mt-1">
+                            Servicio: <span className="text-teal-400 font-semibold">{appt.service_type}</span>
+                          </p>
+                          <p className="text-xs text-slate-450">
+                            Nivel de dolor: <span className="text-amber-450 font-semibold">{appt.pain_scale}/10</span>
+                          </p>
+                          {appt.symptoms && (
+                            <p className="text-xs text-slate-500 mt-1 italic leading-relaxed">
+                              Síntomas: &quot;{appt.symptoms}&quot;
+                            </p>
+                          )}
                           {appt.notes && (
-                            <p className="text-xs text-slate-500 italic mt-2">
-                              Motivo: &quot;{appt.notes}&quot;
+                            <p className="text-xs text-slate-500 italic mt-1 leading-relaxed">
+                              Notas: &quot;{appt.notes}&quot;
                             </p>
                           )}
                         </div>
@@ -358,6 +425,62 @@ export default function PatientDashboard() {
                       </option>
                     ))}
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                    Servicio Requerido *
+                  </label>
+                  <select
+                    value={serviceType}
+                    onChange={(e) => setServiceType(e.target.value)}
+                    className="block w-full px-3 py-2.5 border border-slate-800 rounded-xl bg-slate-950 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    required
+                  >
+                    <option value="">-- Elige un servicio --</option>
+                    <option value="Terapia de Dolor">1. Terapia de Dolor</option>
+                    <option value="Hernias Discales">2. Hernias Discales</option>
+                    <option value="Fracturas y Fisuras">3. Fracturas y Fisuras</option>
+                    <option value="Esguinces y tendinitis">4. Esguinces y tendinitis</option>
+                    <option value="Masajes relajantes y descontracturantes">5. Masajes relajantes y descontracturantes</option>
+                    <option value="Enfermedades neurológicas">6. Enfermedades neurológicas</option>
+                    <option value="Terapia de Lenguaje">7. Terapia de Lenguaje</option>
+                    <option value="Estimulación temprana">8. Estimulación temprana</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-1.5 flex justify-between">
+                    <span>Nivel de Dolor Actual *</span>
+                    <span className="text-amber-400 font-bold">{painScale} / 10</span>
+                  </label>
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    value={painScale}
+                    onChange={(e) => setPainScale(Number(e.target.value))}
+                    className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-teal-400 border border-slate-800"
+                  />
+                  <div className="flex justify-between text-[10px] text-slate-500 mt-1">
+                    <span>1 (Leve)</span>
+                    <span>5 (Moderado)</span>
+                    <span>10 (Insoportable)</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                    Descripción de Síntomas / Molestias *
+                  </label>
+                  <textarea
+                    value={symptoms}
+                    onChange={(e) => setSymptoms(e.target.value)}
+                    className="block w-full px-3 py-2.5 border border-slate-800 rounded-xl bg-slate-950 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    placeholder="Detalla qué dolor sientes, hace cuánto tiempo, etc."
+                    rows={2}
+                    required
+                  />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

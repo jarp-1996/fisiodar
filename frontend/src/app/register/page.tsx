@@ -11,6 +11,8 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [weight, setWeight] = useState('');
+  const [medicalHistory, setMedicalHistory] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,7 +30,16 @@ export default function RegisterPage() {
     }
 
     try {
-      await register(email, password, firstName, lastName, phone);
+      const numericWeight = weight ? parseFloat(weight) : undefined;
+      await register(
+        email,
+        password,
+        firstName,
+        lastName,
+        phone,
+        numericWeight,
+        medicalHistory
+      );
     } catch (err: any) {
       setError(err.message || 'Error al registrarse. Inténtalo de nuevo.');
     }
@@ -99,17 +110,46 @@ export default function RegisterPage() {
               </div>
             </div>
 
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="weight" className="block text-sm font-medium text-slate-300">
+                  Peso (kg) <span className="text-xs text-slate-500">(Opcional)</span>
+                </label>
+                <input
+                  id="weight"
+                  type="number"
+                  step="0.1"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                  className="mt-1 appearance-none block w-full px-3 py-2 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all"
+                  placeholder="70.5"
+                />
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-slate-300">
+                  Teléfono / WhatsApp
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="mt-1 appearance-none block w-full px-3 py-2 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all"
+                  placeholder="958 108 389"
+                />
+              </div>
+            </div>
+
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-slate-300">
-                Teléfono / WhatsApp
+              <label htmlFor="medicalHistory" className="block text-sm font-medium text-slate-300">
+                Historial Médico Importante <span className="text-xs text-slate-500">(Opcional)</span>
               </label>
-              <input
-                id="phone"
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="mt-1 appearance-none block w-full px-4 py-2.5 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-650 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all"
-                placeholder="+54 9 11 5555-5555"
+              <textarea
+                id="medicalHistory"
+                value={medicalHistory}
+                onChange={(e) => setMedicalHistory(e.target.value)}
+                className="mt-1 appearance-none block w-full px-4 py-2 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all h-20 resize-none"
+                placeholder="Ej: Hipertensión, operado de rodilla, etc."
               />
             </div>
 

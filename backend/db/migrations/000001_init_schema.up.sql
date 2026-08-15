@@ -8,6 +8,11 @@ CREATE TABLE users (
     last_name VARCHAR(100) NOT NULL,
     phone VARCHAR(50),
     role VARCHAR(20) NOT NULL CHECK (role IN ('patient', 'therapist', 'admin')),
+    
+    -- Nuevos campos de ficha médica para el paciente
+    weight NUMERIC(5,2), 
+    medical_history TEXT, -- Hipertensión, operaciones, alergias, etc.
+    
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -17,7 +22,13 @@ CREATE TABLE appointments (
     therapist_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     appointment_time TIMESTAMP WITH TIME ZONE NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'cancelled', 'completed')),
-    notes TEXT,
+    notes TEXT, -- Comentarios adicionales
+    
+    -- Nuevos campos del flujo de reserva del paciente
+    service_type VARCHAR(100) NOT NULL, -- Terapia de dolor, hernia discal, etc.
+    pain_scale INT NOT NULL CHECK (pain_scale BETWEEN 1 AND 10), -- Escala de dolor 1-10
+    symptoms TEXT, -- Descripción de malestares
+    
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -27,6 +38,6 @@ CREATE TABLE medical_records (
     therapist_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     appointment_id UUID REFERENCES appointments(id) ON DELETE SET NULL,
     diagnosis TEXT NOT NULL,
-    treatment TEXT NOT NULL,
+    treatment TEXT NOT NULL, -- Recomendaciones, ejercicios, etc.
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

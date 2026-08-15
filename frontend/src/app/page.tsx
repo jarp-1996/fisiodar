@@ -8,28 +8,52 @@ export default function Home() {
 
   const services = [
     {
-      title: 'Rehabilitación Deportiva',
-      description: 'Recuperación optimizada y prevención de lesiones para atletas de alto rendimiento y aficionados.',
-      icon: '🏃‍♂️',
-      tag: 'Deportistas',
+      title: 'Terapia de Dolor',
+      description: 'Alivio eficaz de dolores musculares, articulares y crónicos mediante técnicas manuales y agentes físicos.',
+      icon: '🩹',
+      tag: 'Dolor',
     },
     {
-      title: 'Kinesiología Traumatológica',
-      description: 'Tratamiento efectivo de fracturas, esguinces, tendinitis y dolores articulares crónicos.',
+      title: 'Hernias Discales',
+      description: 'Tratamiento especializado y tracción controlada para reabsorción y descompresión de discos vertebrales.',
       icon: '🦴',
-      tag: 'Articulaciones',
+      tag: 'Columna',
     },
     {
-      title: 'Reeducación Postural (RPG)',
-      description: 'Corrección de postura, dolores de columna, escoliosis y tensiones musculares acumuladas.',
-      icon: '🧍‍♀️',
-      tag: 'Postura',
+      title: 'Fracturas y Fisuras',
+      description: 'Rehabilitación post-inmovilización para recuperar rango de movimiento, fuerza y funcionalidad ósea.',
+      icon: '🦾',
+      tag: 'Huesos',
     },
     {
-      title: 'Fisioterapia Neurológica',
-      description: 'Tratamiento especializado para secuelas de ACV, Parkinson y esclerosis múltiple.',
+      title: 'Esguinces y Tendinitis',
+      description: 'Recuperación de ligamentos y tendones inflamados tras torceduras o sobreesfuerzo físico severo.',
+      icon: '🏃‍♂️',
+      tag: 'Articular',
+    },
+    {
+      title: 'Masajes Relajantes',
+      description: 'Masajes profesionales descontracturantes para liberar tensiones musculares acumuladas por estrés.',
+      icon: '💆‍♀️',
+      tag: 'Bienestar',
+    },
+    {
+      title: 'Enfermedades Neurológicas',
+      description: 'Rehabilitación integral para secuelas de parálisis, ACV, Parkinson y esclerosis múltiple.',
       icon: '🧠',
       tag: 'Neurología',
+    },
+    {
+      title: 'Terapia de Lenguaje',
+      description: 'Tratamiento personalizado para dificultades de habla, pronunciación y comunicación en niños y adultos.',
+      icon: '🗣️',
+      tag: 'Lenguaje',
+    },
+    {
+      title: 'Estimulación Temprana',
+      description: 'Ejercicios de psicomotricidad y desarrollo cognitivo para bebés y niños en su primera infancia.',
+      icon: '👶',
+      tag: 'Infantil',
     },
   ];
 
@@ -127,16 +151,16 @@ export default function Home() {
               <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mt-1">Digital y Seguro</p>
             </div>
             <div>
-              <p className="text-3xl font-extrabold text-teal-400">+5,000</p>
-              <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mt-1">Pacientes Felices</p>
+              <p className="text-3xl font-extrabold text-teal-400">L, M, V</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mt-1">8:00 AM - 8:00 PM</p>
             </div>
             <div>
-              <p className="text-3xl font-extrabold text-teal-400">24/7</p>
-              <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mt-1">Gestión de Turnos</p>
+              <p className="text-3xl font-extrabold text-teal-400">Celular</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mt-1">958 108 389</p>
             </div>
             <div>
-              <p className="text-3xl font-extrabold text-teal-400">15+</p>
-              <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mt-1">Especialistas Certificados</p>
+              <p className="text-3xl font-extrabold text-teal-400">Atención</p>
+              <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mt-1">Lic. Dariana</p>
             </div>
           </div>
         </div>
@@ -148,7 +172,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">Nuestras Especialidades</h2>
             <p className="text-slate-400 max-w-2xl mx-auto">
-              Brindamos una cobertura integral de fisioterapia y kinesiología utilizando técnicas modernas y equipamiento de última generación.
+              Ofrecemos servicios de kinesiología y terapia física de alta calidad. Atendemos lunes, miércoles y viernes de 8:00 AM a 8:00 PM (Almuerzo 1:00 PM a 2:00 PM). Domingos previa consulta con la Lic. Dariana.
             </p>
           </div>
 
@@ -182,15 +206,28 @@ export default function Home() {
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-3xl sm:text-5xl font-black mb-6">¿Listo para comenzar tu recuperación?</h2>
-          <p className="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
-            Regístrate ahora, elige tu terapeuta, agenda tu primer turno en el horario de tu preferencia y accede a tus notas médicas al instante.
+          <p className="text-slate-400 text-lg mb-4 max-w-xl mx-auto">
+            Regístrate, solicita tu cita en línea seleccionando el tipo de servicio médico e ingresa tu nivel de dolor para evaluar tu diagnóstico.
           </p>
-          <Link
-            href={user ? '/dashboard/patient' : '/register'}
-            className="inline-flex px-8 py-4 bg-teal-500 hover:bg-teal-400 text-slate-950 font-extrabold text-base rounded-xl transition-all duration-300 shadow-xl shadow-teal-500/15"
-          >
-            Crear mi Cuenta de Paciente
-          </Link>
+          <p className="text-teal-400 text-base font-bold mb-10">
+            📞 Teléfonos de Contacto: 958 108 389 / 944 130 760 (WhatsApp y Celular)
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href={user ? '/dashboard/patient' : '/register'}
+              className="w-full sm:w-auto px-8 py-4 bg-teal-500 hover:bg-teal-400 text-slate-950 font-extrabold text-base rounded-xl transition-all duration-300 shadow-xl shadow-teal-500/15"
+            >
+              Crear mi Cuenta de Paciente
+            </Link>
+            <a
+              href="https://wa.me/51958108389"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-slate-800 text-teal-400 font-bold text-base rounded-xl transition-all duration-300 border border-slate-800"
+            >
+              Escríbenos por WhatsApp
+            </a>
+          </div>
         </div>
       </section>
 
