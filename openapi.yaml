@@ -1,0 +1,218 @@
+openapi: 3.0.3
+info:
+  title: Fisiodar API Specification
+  description: Especificación formal de la API de Fisiodar para la gestión y reserva de turnos del centro de fisioterapia.
+  version: 1.0.0
+paths:
+  /api/auth/register:
+    post:
+      summary: Registra un nuevo paciente
+      description: Permite la creación pública de cuentas con el rol 'patient'.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - first_name
+                - last_name
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                phone:
+                  type: string
+      responses:
+        '201':
+          description: Registro exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Datos inválidos
+        '498':
+          description: El correo electrónico ya está en uso
+
+  /api/auth/login:
+    post:
+      summary: Inicia sesión de usuario
+      description: Valida credenciales de forma segura utilizando bcrypt y devuelve un JWT.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Autenticación exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Credenciales inválidas (Error genérico por seguridad)
+
+  /api/appointments:
+    get:
+      summary: Obtiene los turnos programados
+      description: Devuelve las citas filtradas por el rol del usuario autenticado (Paciente ve las suyas, Kinesiólogo ve las asignadas, Admin ve todas).
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de turnos obtenidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Appointment'
+        '401':
+          description: No autorizado
+    post:
+      summary: Reserva un nuevo turno
+      description: Permite agendar una cita. Valida que el kinesiólogo exista y que la hora no esté duplicada.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - therapist_id
+                - appointment_time
+              properties:
+                therapist_id:
+                  type: string
+                  format: uuid
+                appointment_time:
+                  type: string
+                  format: date-time
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Turno creado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          description: Datos incorrectos u hora en el pasado
+        '409':
+          description: Conflicto de horario (Kinesiólogo ya reservado)
+
+  /api/records:
+    post:
+      summary: Registra una nueva nota de evolución clínica
+      description: Restringido únicamente a usuarios con rol 'therapist' o 'admin'.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - patient_id
+                - diagnosis
+                - treatment
+              properties:
+                patient_id:
+                  type: string
+                  format: uuid
+                appointment_id:
+                  type: string
+                  format: uuid
+                diagnosis:
+                  type: string
+                treatment:
+                  type: string
+      responses:
+        '201':
+          description: Ficha clínica guardada correctamente
+        '403':
+          description: Prohibido (El rol no es kinesiólogo o admin)
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [patient, therapist, admin]
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        patient_id:
+          type: string
+          format: uuid
+        patient_name:
+          type: string
+        therapist_id:
+          type: string
+          format: uuid
+        therapist_name:
+          type: string
+        appointment_time:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, confirmed, cancelled, completed]
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
