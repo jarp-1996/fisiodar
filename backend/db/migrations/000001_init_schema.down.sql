@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS medical_records;
+DROP TABLE IF EXISTS appointments;
+DROP TABLE IF EXISTS users;
+DROP EXTENSION IF EXISTS "uuid-ossp";
