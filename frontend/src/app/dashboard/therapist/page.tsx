@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { api } from '@/lib/api';
+import { Calendar, FileText, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface Patient {
   id: string;
@@ -139,7 +140,14 @@ export default function TherapistDashboard() {
       <header className="border-b border-[#e4ebe4] bg-white/80 backdrop-blur-md sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl font-serif text-[#2c362b] font-bold">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#5c6b5b]">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#5c6b5b" fillOpacity="0.1" />
+              <path d="M12 18V12" />
+              <path d="M8 11C8 11 9.5 13 12 13C14.5 13 16 11 16 11" />
+              <path d="M8 15C8 15 9.5 17 12 17C14.5 17 16 15 16 15" />
+              <path d="M12 6V8" />
+            </svg>
+            <span className="text-2xl font-serif text-[#2c362b] font-bold tracking-tight">
               Fisiodar
             </span>
             <span className="bg-[#5c6b5b]/10 text-[#5c6b5b] text-xs px-2.5 py-1 rounded-full font-semibold border border-[#5c6b5b]/20">
@@ -170,7 +178,7 @@ export default function TherapistDashboard() {
             <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-[#e4ebe4]">
               <div className="flex items-center justify-between mb-6 border-b border-[#f4f7f4] pb-4">
                 <h2 className="text-xl font-serif text-[#2c362b] flex items-center gap-2">
-                  📋 Mi Agenda de Turnos
+                  <Calendar className="w-6 h-6 text-[#5c6b5b]" /> Mi Agenda de Turnos
                 </h2>
                 <span className="text-xs text-[#5c6b5b] bg-[#f4f7f4] px-3 py-1 rounded-full font-semibold">
                   {appointments.filter(a => a.status === 'pending').length} pendientes
@@ -293,17 +301,17 @@ export default function TherapistDashboard() {
           <div className="space-y-10">
             <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-[#e4ebe4] sticky top-28">
               <h3 className="text-xl font-serif text-[#2c362b] mb-6 border-b border-[#f4f7f4] pb-4 flex items-center gap-2">
-                ✍️ Nota de Evolución Clínica
+                <FileText className="w-6 h-6 text-[#5c6b5b]" /> Nota de Evolución Clínica
               </h3>
 
               {error && (
-                <div className="mb-4 bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100">
-                  ⚠️ {error}
+                <div className="mb-4 bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" /> {error}
                 </div>
               )}
               {successMsg && (
-                <div className="mb-4 bg-green-50 text-green-700 p-3 rounded-lg text-sm border border-green-100">
-                  ✅ {successMsg}
+                <div className="mb-4 bg-green-50 text-green-700 p-3 rounded-lg text-sm border border-green-100 flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 flex-shrink-0" /> {successMsg}
                 </div>
               )}
 

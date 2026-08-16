@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { api } from '@/lib/api';
+import { ClipboardList, Calendar, FileText, CalendarPlus, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface Therapist {
   id: string;
@@ -254,7 +255,7 @@ export default function PatientDashboard() {
             {/* Ficha Médica del Paciente */}
             <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 sm:p-8">
               <h2 className="text-xl font-bold text-slate-100 mb-4 flex items-center gap-2">
-                📋 Mi Ficha de Paciente
+                <ClipboardList className="w-5 h-5 text-teal-400" /> Mi Ficha de Paciente
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-300">
                 <div className="bg-slate-950 p-4 rounded-xl border border-slate-850">
@@ -273,7 +274,7 @@ export default function PatientDashboard() {
             {/* Appointments Section */}
             <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 sm:p-8">
               <h2 className="text-2xl font-bold text-slate-100 mb-6 flex items-center gap-2">
-                📅 Mis Turnos Programados
+                <Calendar className="w-6 h-6 text-teal-400" /> Mis Turnos Programados
               </h2>
 
               {appointments.length === 0 ? (
@@ -363,7 +364,7 @@ export default function PatientDashboard() {
             {/* Medical Records Section */}
             <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 sm:p-8">
               <h2 className="text-2xl font-bold text-slate-100 mb-6 flex items-center gap-2">
-                📋 Mi Historial Clínico
+                <FileText className="w-6 h-6 text-teal-400" /> Mi Historial Clínico
               </h2>
 
               {records.length === 0 ? (
@@ -414,17 +415,17 @@ export default function PatientDashboard() {
           <div className="space-y-10">
             <div className="bg-slate-900/60 border border-slate-850 rounded-2xl p-6 sm:p-8 sticky top-28">
               <h3 className="text-xl font-bold text-slate-100 mb-6 flex items-center gap-2">
-                🏥 Reservar Nuevo Turno
+                <CalendarPlus className="w-6 h-6 text-teal-400" /> Reservar Nuevo Turno
               </h3>
 
               {error && (
-                <div className="mb-4 bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm">
-                  ⚠️ {error}
+                <div className="mb-4 bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" /> {error}
                 </div>
               )}
               {successMsg && (
-                <div className="mb-4 bg-teal-500/10 border border-teal-500/20 text-teal-400 p-3 rounded-lg text-sm">
-                  ✅ {successMsg}
+                <div className="mb-4 bg-teal-500/10 border border-teal-500/20 text-teal-400 p-3 rounded-lg text-sm flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 flex-shrink-0" /> {successMsg}
                 </div>
               )}
 
