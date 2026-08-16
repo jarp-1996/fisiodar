@@ -18,7 +18,8 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, loading: isAuthLoading } = useAuth();
+  const isAuthenticated = !!user;
   const router = useRouter();
 
   useEffect(() => {
@@ -51,9 +52,9 @@ export default function AdminDashboard() {
     };
 
     fetchStats();
-  }, [isAuthenticated, user, isLoading, router]);
+  }, [isAuthenticated, user, isAuthLoading, router]);
 
-  if (loading || isLoading) {
+  if (loading || isAuthLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f4f7f4]">
         <div className="animate-pulse text-[#5c6b5b] font-medium tracking-wide">Autenticando credenciales...</div>
