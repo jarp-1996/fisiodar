@@ -24,7 +24,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     // Wait for auth context to finish loading
-    if (isLoading) return;
+    if (isAuthLoading) return;
 
     if (!isAuthenticated) {
       router.push('/login');
