@@ -59,6 +59,7 @@ const icons = {
 
 export default function Home() {
   const { user } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const services = [
     {
@@ -127,20 +128,54 @@ export default function Home() {
               {user ? (
                 <Link
                   href={user.role === 'patient' ? '/dashboard/patient' : '/dashboard/therapist'}
-                  className="bg-[#9fb39e] hover:bg-[#8d9e8c] text-white font-medium px-5 py-2.5 rounded-full text-sm transition-all duration-300 shadow-sm"
+                  className="hidden md:inline-block bg-[#9fb39e] hover:bg-[#8d9e8c] text-white font-medium px-5 py-2.5 rounded-full text-sm transition-all duration-300 shadow-sm"
                 >
                   Mi Panel ({user.first_name})
                 </Link>
               ) : (
                 <Link
                   href="/register"
-                  className="bg-[#9fb39e] hover:bg-[#8d9e8c] text-white font-medium px-5 py-2.5 rounded-full text-sm transition-all duration-300 shadow-sm"
+                  className="hidden md:inline-block bg-[#9fb39e] hover:bg-[#8d9e8c] text-white font-medium px-5 py-2.5 rounded-full text-sm transition-all duration-300 shadow-sm"
                 >
                   Reservar Cita
                 </Link>
               )}
+
+              {/* Mobile Menu Button */}
+              <button 
+                className="md:hidden text-[#5c6e61] hover:text-[#9fb39e] focus:outline-none p-2"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  {isMobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
             </div>
           </div>
+
+          {/* Mobile Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden mt-4 bg-white rounded-2xl shadow-xl border border-[#eae6d8] p-5 flex flex-col gap-4 absolute left-4 right-4 z-50">
+              <a href="#" onClick={() => setIsMobileMenuOpen(false)} className="text-[#5c6e61] font-semibold hover:text-[#9fb39e]">Inicio</a>
+              <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="text-[#5c6e61] font-semibold hover:text-[#9fb39e]">Servicios</a>
+              <a href="#clinic" onClick={() => setIsMobileMenuOpen(false)} className="text-[#5c6e61] font-semibold hover:text-[#9fb39e]">Ubícanos</a>
+              <a href="#team" onClick={() => setIsMobileMenuOpen(false)} className="text-[#5c6e61] font-semibold hover:text-[#9fb39e]">Nosotros</a>
+              <hr className="border-[#eae6d8]" />
+              {user ? (
+                <Link href={user.role === 'patient' ? '/dashboard/patient' : '/dashboard/therapist'} className="bg-[#9fb39e] text-center text-white font-medium px-5 py-3 rounded-xl shadow-sm">
+                  Mi Panel ({user.first_name})
+                </Link>
+              ) : (
+                <Link href="/register" className="bg-[#9fb39e] text-center text-white font-medium px-5 py-3 rounded-xl shadow-sm">
+                  Reservar Cita
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       </nav>
 
