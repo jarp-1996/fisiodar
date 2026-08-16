@@ -122,10 +122,10 @@ export default function TherapistDashboard() {
 
   if (authLoading || fetching) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f4f7f4] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">Cargando tu panel de especialista...</p>
+          <div className="w-16 h-16 border-4 border-[#5c6b5b] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[#5c6b5b] font-medium tracking-wide">Cargando tu panel de especialista...</p>
         </div>
       </div>
     );
@@ -134,27 +134,27 @@ export default function TherapistDashboard() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-teal-500 selection:text-slate-950">
+    <div className="min-h-screen bg-[#f4f7f4] font-sans selection:bg-[#5c6b5b] selection:text-white pb-12">
       {/* Header */}
-      <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-45">
+      <header className="border-b border-[#e4ebe4] bg-white/80 backdrop-blur-md sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold bg-gradient-to-r from-teal-400 to-emerald-500 bg-clip-text text-transparent">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-serif text-[#2c362b] font-bold">
               Fisiodar
             </span>
-            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-emerald-500/20">
+            <span className="bg-[#5c6b5b]/10 text-[#5c6b5b] text-xs px-2.5 py-1 rounded-full font-semibold border border-[#5c6b5b]/20">
               Kinesiólogo / Especialista
             </span>
           </div>
           
           <div className="flex items-center gap-4">
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-bold text-slate-200">{user.first_name} {user.last_name}</p>
-              <p className="text-xs text-slate-500">{user.email}</p>
+              <p className="text-sm font-bold text-[#2c362b]">{user.first_name} {user.last_name}</p>
+              <p className="text-xs text-[#5c6b5b]">{user.email}</p>
             </div>
             <button
               onClick={logout}
-              className="bg-slate-905 hover:bg-red-500/10 text-slate-400 hover:text-red-400 border border-slate-800 hover:border-red-500/20 px-3.5 py-2 rounded-xl text-sm font-medium transition-all"
+              className="hover:bg-red-50 text-[#5c6b5b] hover:text-red-600 border border-[#e4ebe4] hover:border-red-200 px-3.5 py-2 rounded-xl text-sm font-medium transition-all"
             >
               Cerrar Sesión
             </button>
@@ -167,19 +167,19 @@ export default function TherapistDashboard() {
           
           {/* Left Column: Agenda management */}
           <div className="lg:col-span-2 space-y-10">
-            <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-6 sm:p-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-slate-100 flex items-center gap-2">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-[#e4ebe4]">
+              <div className="flex items-center justify-between mb-6 border-b border-[#f4f7f4] pb-4">
+                <h2 className="text-xl font-serif text-[#2c362b] flex items-center gap-2">
                   📋 Mi Agenda de Turnos
                 </h2>
-                <span className="text-xs text-slate-450 bg-slate-950 border border-slate-900 px-3 py-1 rounded-full font-semibold">
+                <span className="text-xs text-[#5c6b5b] bg-[#f4f7f4] px-3 py-1 rounded-full font-semibold">
                   {appointments.filter(a => a.status === 'pending').length} pendientes
                 </span>
               </div>
 
               {appointments.length === 0 ? (
-                <div className="text-center py-16 bg-slate-950/40 rounded-xl border border-slate-900">
-                  <p className="text-slate-500 text-sm">No tienes turnos programados en tu agenda.</p>
+                <div className="text-center py-16 bg-[#f4f7f4]/50 rounded-xl border border-dashed border-[#e4ebe4]">
+                  <p className="text-[#5c6b5b] font-medium">No tienes turnos programados en tu agenda.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -199,22 +199,22 @@ export default function TherapistDashboard() {
                     return (
                       <div
                         key={appt.id}
-                        className="bg-slate-950 p-5 rounded-xl border border-slate-850 hover:border-slate-800 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                        className="bg-white p-5 rounded-xl border border-[#e4ebe4] hover:border-[#5c6b5b]/30 hover:shadow-sm transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                       >
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-3">
-                            <p className="text-sm font-bold text-slate-200">
+                        <div className="space-y-1.5 w-full">
+                          <div className="flex items-center justify-between sm:justify-start gap-3 mb-2">
+                            <p className="text-base font-bold text-[#2c362b]">
                               {appt.patient_name || 'Paciente'}
                             </p>
                             <span
-                              className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider border ${
+                              className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider ${
                                 appt.status === 'pending'
-                                  ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                                  ? 'bg-amber-100 text-amber-700'
                                   : appt.status === 'confirmed'
-                                  ? 'bg-teal-500/10 text-teal-400 border-teal-500/20'
+                                  ? 'bg-blue-100 text-blue-700'
                                   : appt.status === 'completed'
-                                  ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20'
-                                  : 'bg-red-500/10 text-red-400 border-red-500/20'
+                                  ? 'bg-[#5c6b5b]/10 text-[#5c6b5b]'
+                                  : 'bg-red-100 text-red-700'
                               }`}
                             >
                               {appt.status === 'pending' && 'Pendiente'}
@@ -224,40 +224,40 @@ export default function TherapistDashboard() {
                             </span>
                           </div>
                           
-                          <p className="text-xs text-slate-400 capitalize">
+                          <p className="text-sm font-medium text-[#5c6b5b] capitalize">
                             {formattedDate} - {formattedTime} hs
                           </p>
-                          <p className="text-xs text-slate-455 mt-1">
-                            Servicio: <span className="text-teal-400 font-semibold">{appt.service_type}</span>
+                          <p className="text-sm text-[#5c6b5b]">
+                            Servicio: <span className="font-semibold text-[#2c362b]">{appt.service_type}</span>
                           </p>
-                          <p className="text-xs text-slate-455">
-                            Nivel de dolor: <span className="text-amber-450 font-semibold">{appt.pain_scale}/10</span>
+                          <p className="text-sm text-[#5c6b5b]">
+                            Nivel de dolor: <span className="font-semibold text-[#2c362b]">{appt.pain_scale}/10</span>
                           </p>
                           {appt.symptoms && (
-                            <p className="text-xs text-slate-500 mt-1.5 italic leading-relaxed">
-                              Síntomas: &quot;{appt.symptoms}&quot;
+                            <p className="text-sm text-[#5c6b5b] mt-2 italic leading-relaxed bg-[#f4f7f4] p-3 rounded-lg border border-[#e4ebe4]/50">
+                              "{appt.symptoms}"
                             </p>
                           )}
                           {appt.notes && (
-                            <p className="text-xs text-slate-500 italic mt-1 leading-relaxed">
-                              Notas: &quot;{appt.notes}&quot;
+                            <p className="text-sm text-[#5c6b5b] italic mt-1 leading-relaxed bg-[#f4f7f4] p-3 rounded-lg border border-[#e4ebe4]/50">
+                              Notas: "{appt.notes}"
                             </p>
                           )}
                         </div>
 
                         {/* Status update actions */}
-                        <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                        <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end mt-4 sm:mt-0">
                           {appt.status === 'pending' && (
                             <>
                               <button
                                 onClick={() => handleUpdateStatus(appt.id, 'confirmed')}
-                                className="text-xs font-bold text-slate-950 bg-teal-400 hover:bg-teal-300 px-3 py-1.5 rounded-lg transition-colors"
+                                className="text-sm font-medium text-white bg-[#5c6b5b] hover:bg-[#4a5749] px-4 py-2 rounded-lg transition-colors shadow-sm"
                               >
                                 Confirmar
                               </button>
                               <button
                                 onClick={() => handleUpdateStatus(appt.id, 'cancelled')}
-                                className="text-xs font-bold text-red-400 hover:text-red-300 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 px-3 py-1.5 rounded-lg transition-all"
+                                className="text-sm font-medium text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition-all"
                               >
                                 Cancelar
                               </button>
@@ -268,13 +268,13 @@ export default function TherapistDashboard() {
                             <>
                               <button
                                 onClick={() => handleUpdateStatus(appt.id, 'completed')}
-                                className="text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-350 px-3 py-1.5 rounded-lg transition-colors"
+                                className="text-sm font-medium text-white bg-[#5c6b5b] hover:bg-[#4a5749] px-4 py-2 rounded-lg transition-colors shadow-sm"
                               >
                                 Completado
                               </button>
                               <button
                                 onClick={() => handleUpdateStatus(appt.id, 'cancelled')}
-                                className="text-xs font-bold text-slate-400 hover:text-red-400 hover:bg-red-500/5 px-3 py-1.5 rounded-lg transition-all"
+                                className="text-sm font-medium text-[#5c6b5b] hover:text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition-all"
                               >
                                 Cancelar
                               </button>
@@ -291,31 +291,31 @@ export default function TherapistDashboard() {
 
           {/* Right Column: Evolution note */}
           <div className="space-y-10">
-            <div className="bg-slate-900/60 border border-slate-850 rounded-2xl p-6 sm:p-8 sticky top-28">
-              <h3 className="text-xl font-bold text-slate-100 mb-6 flex items-center gap-2">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-[#e4ebe4] sticky top-28">
+              <h3 className="text-xl font-serif text-[#2c362b] mb-6 border-b border-[#f4f7f4] pb-4 flex items-center gap-2">
                 ✍️ Nota de Evolución Clínica
               </h3>
 
               {error && (
-                <div className="mb-4 bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm">
+                <div className="mb-4 bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100">
                   ⚠️ {error}
                 </div>
               )}
               {successMsg && (
-                <div className="mb-4 bg-teal-500/10 border border-teal-500/20 text-teal-400 p-3 rounded-lg text-sm">
+                <div className="mb-4 bg-green-50 text-green-700 p-3 rounded-lg text-sm border border-green-100">
                   ✅ {successMsg}
                 </div>
               )}
 
               <form onSubmit={handleCreateRecord} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                  <label className="block text-sm font-bold text-[#2c362b] mb-2">
                     Seleccionar Paciente *
                   </label>
                   <select
                     value={selectedPatientId}
                     onChange={(e) => setSelectedPatientId(e.target.value)}
-                    className="block w-full px-3 py-2.5 border border-slate-800 rounded-xl bg-slate-950 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    className="block w-full px-4 py-3 border border-[#e4ebe4] rounded-xl bg-white text-[#2c362b] text-sm focus:outline-none focus:ring-2 focus:ring-[#5c6b5b] focus:border-transparent transition-all shadow-sm"
                     required
                   >
                     <option value="">-- Elige un paciente --</option>
@@ -331,23 +331,23 @@ export default function TherapistDashboard() {
                     const selectedPatientObj = patients.find(p => p.id === selectedPatientId);
                     if (!selectedPatientObj) return null;
                     return (
-                       <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 text-xs space-y-2 mt-3 text-slate-300">
-                         <p className="font-bold text-teal-400">Ficha del Paciente:</p>
-                         <p><span className="text-slate-500">Peso:</span> {selectedPatientObj.weight ? `${selectedPatientObj.weight} kg` : 'No registrado'}</p>
-                         <p className="leading-relaxed whitespace-pre-wrap"><span className="text-slate-500">Condiciones/Operaciones:</span> {selectedPatientObj.medical_history || 'Sin antecedentes.'}</p>
+                       <div className="bg-[#f4f7f4] p-4 rounded-xl text-sm space-y-2 mt-4 text-[#5c6b5b]">
+                         <p className="font-bold text-[#2c362b]">Ficha del Paciente:</p>
+                         <p><span className="font-medium text-[#2c362b]">Peso:</span> {selectedPatientObj.weight ? `${selectedPatientObj.weight} kg` : 'No registrado'}</p>
+                         <p className="leading-relaxed whitespace-pre-wrap"><span className="font-medium text-[#2c362b]">Condiciones/Operaciones:</span> {selectedPatientObj.medical_history || 'Sin antecedentes.'}</p>
                        </div>
                     );
                   })()}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                  <label className="block text-sm font-bold text-[#2c362b] mb-2">
                     Diagnóstico *
                   </label>
                   <textarea
                     value={diagnosis}
                     onChange={(e) => setDiagnosis(e.target.value)}
-                    className="block w-full px-3 py-2.5 border border-slate-800 rounded-xl bg-slate-950 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    className="block w-full px-4 py-3 border border-[#e4ebe4] rounded-xl bg-white text-[#2c362b] text-sm focus:outline-none focus:ring-2 focus:ring-[#5c6b5b] focus:border-transparent transition-all shadow-sm resize-none"
                     placeholder="Ej. Contractura cervical severa, sospecha de hernia de disco L4-L5..."
                     rows={3}
                     required
@@ -355,13 +355,13 @@ export default function TherapistDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                  <label className="block text-sm font-bold text-[#2c362b] mb-2">
                     Tratamiento Aplicado *
                   </label>
                   <textarea
                     value={treatment}
                     onChange={(e) => setTreatment(e.target.value)}
-                    className="block w-full px-3 py-2.5 border border-slate-800 rounded-xl bg-slate-950 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    className="block w-full px-4 py-3 border border-[#e4ebe4] rounded-xl bg-white text-[#2c362b] text-sm focus:outline-none focus:ring-2 focus:ring-[#5c6b5b] focus:border-transparent transition-all shadow-sm resize-none"
                     placeholder="Ej. Terapia manual, aplicación de ultrasonido durante 10 mins, ejercicios de elongación y reeducación postural..."
                     rows={4}
                     required
@@ -371,7 +371,7 @@ export default function TherapistDashboard() {
                 <button
                   type="submit"
                   disabled={recordLoading}
-                  className="w-full flex justify-center py-3 border border-transparent rounded-xl shadow-lg text-sm font-bold text-slate-950 bg-gradient-to-r from-teal-400 to-emerald-500 hover:from-teal-300 hover:to-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-300 disabled:opacity-50"
+                  className="w-full flex justify-center py-3.5 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-[#5c6b5b] hover:bg-[#4a5749] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5c6b5b] transition-all duration-300 disabled:opacity-50 mt-2"
                 >
                   {recordLoading ? 'Guardando Nota...' : 'Guardar en Ficha Clínica'}
                 </button>
