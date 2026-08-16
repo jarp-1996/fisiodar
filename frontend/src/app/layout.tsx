@@ -19,7 +19,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Fisiodar - Booking & Fisioterapia",
+  title: "Fisiodar | Centro Fisioterapéutico",
   description: "Plataforma profesional para reservas de turnos e historial clínico.",
 };
 
