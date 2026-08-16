@@ -50,5 +50,22 @@ Actualizamos el `Dockerfile` para incluir la carpeta de migraciones y flexibiliz
 **El Aprendizaje del Día:** 
 Comprobamos que las interfaces rígidas matan la experiencia del usuario. Cambiar unos simples `<input type="date">` por un calendario visual interactivo eleva el proyecto de "un simple ejercicio de programación" a "un producto listo para producción". Además, aprendimos a dejar de lado la ansiedad por programar y en su lugar usar un flujo de **Planificar y Ejecutar (Artifacts)**.
 
+## Día 4: Panel de Administración, TDD y Despliegue en Vercel
+*Fecha: Agosto 2026*
+
+**El Contexto:** 
+Con el Backend asegurado en Railway, procedimos a desplegar el Frontend en **Vercel**. Aprovechamos la oportunidad para aplicar metodologías rigurosas y construir el Panel de Administración de Fisiodar, el lugar donde la clínica verá las métricas de su negocio.
+
+**Las Dificultades (El Error del Paquete Olvidado):** 
+1. **Despliegue del Frontend:** Configurar variables de entorno (`NEXT_PUBLIC_API_URL`) fue sencillo gracias a la UI de Vercel, pero cometimos un error de "novatos" durante el desarrollo de la UI del dashboard. 
+2. **Dependencias "Fantasma":** Diseñamos un componente visual premium (`StatCard`) y utilizamos íconos de la librería `lucide-react`. Sin embargo, olvidamos registrar esa dependencia en el `package.json`. Como resultado, el código funcionaba en nuestra mente, pero al llegar a Vercel, el proceso de compilación abortó por un error de "Módulo no encontrado".
+
+**Los Logros:** 
+Aplicamos **TDD (Test-Driven Development)** de forma ejemplar en el backend. Escribimos pruebas en Go que deliberadamente fallaban para los "Pacientes" y permitían acceso a los "Admins". Luego, escribimos el código necesario en `admin.go` para conectar PostgreSQL y extraer las estadísticas (Total de pacientes, citas completadas, etc). El Frontend también fue blindado: si no hay sesión iniciada, redirige al Login.
+
+**El Aprendizaje del Día (Actualización del Spec):** 
+Los errores de dependencias son inaceptables en un flujo maduro de Spec-Driven Development (SDD). 
+**Nueva Regla de SDD:** "Jamás importar una librería en un componente sin antes verificar explícitamente el archivo `package.json` e instalarla". Hemos codificado esta regla en el comportamiento del agente para evitar fallas silenciosas en producción.
+
 ---
 *Continuará...*
