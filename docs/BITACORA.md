@@ -33,6 +33,20 @@ Eliminar un campo de un formulario (el selector de terapeuta) parece fácil, per
 **Los Logros:** 
 El calendario quedó espectacular. Logramos implementar un panel que se siente premium, con bloques de colores, botones interactivos y navegación de hasta 4 semanas en el futuro. También creamos la función de "Ficha Médica Rápida" para Dariana: al seleccionar un paciente en su panel, el sistema inyecta en la pantalla instantáneamente el peso y las condiciones médicas de ese paciente. ¡Pura magia visual!
 
+---
+
+## Día 3: Despliegue en la Nube y Resolución de Problemas Arquitectónicos
+*Fecha: Agosto 2026*
+
+**El Contexto:** 
+Al finalizar la UI del Landing y las subpáginas (Servicios, Nosotros, Ubícanos), decidimos hacer un despliegue de la arquitectura completa antes de dormir. La estrategia elegida fue un modelo desacoplado "Full-Stack Real": Frontend en **Vercel**, Backend en **Railway** (mediante Docker), y la Base de Datos Serverless en **Neon**.
+
+**Las Dificultades (El "Crash" en Producción):** 
+1. **El fallo del Dockerfile:** Inicialmente, el servidor de Go en Railway compilaba bien, pero se estrellaba ("Crashed") 57 segundos después de arrancar. El problema fue que el `Dockerfile` solo copiaba el binario compilado `main` a la imagen final de Alpine, olvidando la carpeta `db/migrations`. Como el servidor de Go intenta leer los archivos `.sql` al iniciarse para verificar migraciones, entraba en pánico (panic) por archivo no encontrado.
+2. **Las barreras de CORS:** Identificamos de manera proactiva que el servidor de Go estaba limitando los orígenes cruzados (CORS) estrictamente a `http://localhost:3000`. Si no lo arreglábamos, el frontend en Vercel jamás habría podido obtener los datos de Railway.
+
+**Los Logros:** 
+Actualizamos el `Dockerfile` para incluir la carpeta de migraciones y flexibilizamos la cabecera `Access-Control-Allow-Origin` a `*` en `server.go`. Esto nos enseñó una valiosa lección: **siempre hay que empaquetar los archivos estáticos o de configuración junto con el binario en Docker, y jamás olvidar ajustar el CORS para el entorno de producción.**
 **El Aprendizaje del Día:** 
 Comprobamos que las interfaces rígidas matan la experiencia del usuario. Cambiar unos simples `<input type="date">` por un calendario visual interactivo eleva el proyecto de "un simple ejercicio de programación" a "un producto listo para producción". Además, aprendimos a dejar de lado la ansiedad por programar y en su lugar usar un flujo de **Planificar y Ejecutar (Artifacts)**.
 
