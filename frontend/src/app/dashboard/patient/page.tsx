@@ -44,13 +44,58 @@ export default function PatientDashboard() {
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   
   // Booking Form State
-  const [therapistId, setTherapistId] = useState('');
-  const [appointmentDate, setAppointmentDate] = useState('');
-  const [appointmentTime, setAppointmentTime] = useState('');
   const [serviceType, setServiceType] = useState('');
   const [painScale, setPainScale] = useState(5);
   const [symptoms, setSymptoms] = useState('');
   const [notes, setNotes] = useState('');
+  
+  // Weekly Calendar State
+  const [weekOffset, setWeekOffset] = useState(0); // 0 = Current week
+  const [selectedDateTime, setSelectedDateTime] = useState<string | null>(null);
+
+  // Calendar Helpers
+  const getWeekDates = (offset: number) => {
+    const today = new Date();
+    const currentDay = today.getDay();
+    const distanceToMonday = currentDay === 0 ? 6 : currentDay - 1; 
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - distanceToMonday + (offset * 7));
+    monday.setHours(0, 0, 0, 0);
+
+    const weekDays = [];
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(monday);
+      day.setDate(monday.getDate() + i);
+      weekDays.push(day);
+    }
+    return weekDays;
+  };
+
+  const weekDays = getWeekDates(weekOffset);
+
+  const getAvailableHours = (date: Date) => {
+    const dayOfWeek = date.getDay();
+    // Only Mon (1), Wed (3), Fri (5)
+    if (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) {
+      return ['08:00', '09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+    }
+    return [];
+  };
+
+  const handleSelectSlot = (date: Date, hourString: string) => {
+    const [hours, mins] = hourString.split(':');
+    const newDate = new Date(date);
+    newDate.setHours(parseInt(hours, 10), parseInt(mins, 10), 0, 0);
+    setSelectedDateTime(newDate.toISOString());
+  };
+
+  const isSlotSelected = (date: Date, hourString: string) => {
+    if (!selectedDateTime) return false;
+    const [hours, mins] = hourString.split(':');
+    const compareDate = new Date(date);
+    compareDate.setHours(parseInt(hours, 10), parseInt(mins, 10), 0, 0);
+    return selectedDateTime === compareDate.toISOString();
+  };
   
   const [fetching, setFetching] = useState(true);
   const [bookingLoading, setBookingLoading] = useState(false);
@@ -98,44 +143,21 @@ export default function PatientDashboard() {
     setError(null);
     setSuccessMsg(null);
 
-    if (!therapistId || !appointmentDate || !appointmentTime || !serviceType) {
-      setError('Por favor, completa todos los campos del turno');
+    if (!selectedDateTime || !serviceType) {
+      setError('Por favor, completa todos los campos del turno y selecciona una fecha en el calendario.');
       return;
     }
-
-    const fullDateTime = new Date(`${appointmentDate}T${appointmentTime}:00`);
-    const dayOfWeek = fullDateTime.getDay(); // 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday
-
-    // Validate days: only Mon (1), Wed (3), Fri (5)
-    if (dayOfWeek !== 1 && dayOfWeek !== 3 && dayOfWeek !== 5) {
-      setError('El horario de atención es únicamente lunes, miércoles y viernes. Para domingos por favor consulta directamente.');
+    if (therapists.length === 0) {
+      setError('No hay especialistas disponibles.');
       return;
     }
-
-    const hours = fullDateTime.getHours();
-    const minutes = fullDateTime.getMinutes();
-    const timeInMinutes = hours * 60 + minutes;
-
-    const startOfWork = 8 * 60; // 8:00 AM
-    const endOfWork = 20 * 60; // 8:00 PM
-    const lunchStart = 13 * 60; // 1:00 PM
-    const lunchEnd = 14 * 60; // 2:00 PM
-
-    if (timeInMinutes < startOfWork || timeInMinutes > endOfWork) {
-      setError('El horario de atención es de 8:00 AM a 8:00 PM.');
-      return;
-    }
-
-    if (timeInMinutes >= lunchStart && timeInMinutes < lunchEnd) {
-      setError('El personal se encuentra en su horario de almuerzo de 1:00 PM a 2:00 PM.');
-      return;
-    }
+    const autoTherapistId = therapists[0].id;
 
     setBookingLoading(true);
     try {
       const newAppt = await api.post<Appointment>('/appointments', {
-        therapist_id: therapistId,
-        appointment_time: fullDateTime.toISOString(),
+        therapist_id: autoTherapistId,
+        appointment_time: selectedDateTime,
         notes,
         service_type: serviceType,
         pain_scale: Number(painScale),
@@ -143,7 +165,7 @@ export default function PatientDashboard() {
       });
 
       // Find therapist name for UI rendering
-      const selectedTherapist = therapists.find(t => t.id === therapistId);
+      const selectedTherapist = therapists.find(t => t.id === autoTherapistId);
       const apptWithTherapistName: Appointment = {
         ...newAppt,
         therapist_name: selectedTherapist 
@@ -155,9 +177,8 @@ export default function PatientDashboard() {
       setSuccessMsg('¡Turno reservado con éxito! Pendiente de confirmación.');
       
       // Reset form
-      setTherapistId('');
-      setAppointmentDate('');
-      setAppointmentTime('');
+      setServiceType('');
+      setSelectedDateTime(null);
       setServiceType('');
       setPainScale(5);
       setSymptoms('');
@@ -408,23 +429,8 @@ export default function PatientDashboard() {
               )}
 
               <form onSubmit={handleBookAppointment} className="space-y-5">
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
-                    Seleccionar Fisioterapeuta *
-                  </label>
-                  <select
-                    value={therapistId}
-                    onChange={(e) => setTherapistId(e.target.value)}
-                    className="block w-full px-3 py-2.5 border border-slate-800 rounded-xl bg-slate-950 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                    required
-                  >
-                    <option value="">-- Elige un profesional --</option>
-                    {therapists.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.first_name} {t.last_name}
-                      </option>
-                    ))}
-                  </select>
+                <div className="hidden">
+                  {/* Fisioterapeuta asignado automáticamente */}
                 </div>
 
                 <div>
@@ -483,30 +489,78 @@ export default function PatientDashboard() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1.5">
-                      Fecha *
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-sm font-medium text-slate-300">
+                      Fecha y Hora de Cita *
                     </label>
-                    <input
-                      type="date"
-                      value={appointmentDate}
-                      onChange={(e) => setAppointmentDate(e.target.value)}
-                      className="block w-full px-3 py-2.5 border border-slate-800 rounded-xl bg-slate-950 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                      required
-                    />
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setWeekOffset(Math.max(0, weekOffset - 1))}
+                        disabled={weekOffset === 0}
+                        className="text-xs px-2.5 py-1 bg-slate-950 border border-slate-800 rounded hover:bg-slate-800 disabled:opacity-50 transition-colors"
+                      >
+                        ← Anterior
+                      </button>
+                      <span className="text-xs font-semibold text-slate-400">
+                        {weekOffset === 0 ? 'Esta semana' : `+${weekOffset} semana${weekOffset > 1 ? 's' : ''}`}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setWeekOffset(Math.min(4, weekOffset + 1))}
+                        disabled={weekOffset === 4}
+                        className="text-xs px-2.5 py-1 bg-slate-950 border border-slate-800 rounded hover:bg-slate-800 disabled:opacity-50 transition-colors"
+                      >
+                        Siguiente →
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1.5">
-                      Hora *
-                    </label>
-                    <input
-                      type="time"
-                      value={appointmentTime}
-                      onChange={(e) => setAppointmentTime(e.target.value)}
-                      className="block w-full px-3 py-2.5 border border-slate-800 rounded-xl bg-slate-950 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                      required
-                    />
+
+                  <div className="grid grid-cols-7 gap-2 overflow-x-auto pb-2">
+                    {weekDays.map((day, idx) => {
+                      const hours = getAvailableHours(day);
+                      const isPast = day < new Date(new Date().setHours(0,0,0,0));
+                      const dayName = day.toLocaleDateString('es-ES', { weekday: 'short' });
+                      const isAvailable = hours.length > 0 && !isPast;
+                      
+                      return (
+                        <div key={idx} className="flex flex-col gap-2 min-w-[70px]">
+                          <div className="text-center p-2 rounded-lg bg-slate-950 border border-slate-850">
+                            <div className="text-xs font-bold text-slate-500 capitalize">{dayName}</div>
+                            <div className={`text-sm font-black ${isAvailable ? 'text-slate-200' : 'text-slate-600'}`}>
+                              {day.getDate()}
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-col gap-1.5 h-48 overflow-y-auto pr-1">
+                            {!isAvailable ? (
+                              <div className="text-[10px] text-center p-2 text-slate-600 bg-slate-900/40 rounded-md border border-slate-800/50">
+                                -
+                              </div>
+                            ) : (
+                              hours.map((h) => {
+                                const selected = isSlotSelected(day, h);
+                                return (
+                                  <button
+                                    key={h}
+                                    type="button"
+                                    onClick={() => handleSelectSlot(day, h)}
+                                    className={`text-[11px] font-bold py-1.5 rounded-md transition-all ${
+                                      selected 
+                                        ? 'bg-teal-500 text-slate-950 shadow-md shadow-teal-500/20' 
+                                        : 'bg-slate-900 text-slate-400 border border-slate-800 hover:border-teal-500/50 hover:text-teal-400'
+                                    }`}
+                                  >
+                                    {h}
+                                  </button>
+                                );
+                              })
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
