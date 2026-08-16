@@ -23,6 +23,9 @@ WORKDIR /root/
 # Copiar el binario precompilado
 COPY --from=builder /app/main .
 
+# Copiar la carpeta de migraciones que necesita el servidor al arrancar
+COPY --from=builder /app/db/migrations ./db/migrations
+
 # Exponer el puerto (Render y Railway suelen usar la variable PORT)
 EXPOSE 8080
 

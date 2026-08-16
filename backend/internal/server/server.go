@@ -36,10 +36,10 @@ func (s *Server) setupMiddlewares() {
 	s.Router.Use(middleware.Recoverer)
 	s.Router.Use(middleware.Timeout(60 * time.Second))
 
-	// CORS configuration for local development
+	// CORS configuration for local development and production
 	s.Router.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000") // Next.js default port
+			w.Header().Set("Access-Control-Allow-Origin", "*") // Allow Vercel and local
 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 			w.Header().Set("Access-Control-Allow-Credentials", "true")
