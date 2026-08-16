@@ -68,6 +68,13 @@ func (s *Server) setupRoutes() {
 		r.Mount("/appointments", s.appointmentRoutes())
 		r.Mount("/records", s.recordRoutes())
 		r.Mount("/users", s.userRoutes())
+
+		// Admin routes (Protected by AuthMiddleware and RequireRole)
+		r.Route("/admin", func(rAdmin chi.Router) {
+			rAdmin.Use(s.AuthMiddleware)
+			rAdmin.Use(RequireRole("admin"))
+			rAdmin.Mount("/", s.adminRoutes())
+		})
 	})
 }
 
