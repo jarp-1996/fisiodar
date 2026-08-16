@@ -40,9 +40,8 @@ export default function AdminDashboard() {
 
     const fetchStats = async () => {
       try {
-        // Our api.ts automatically attaches the JWT Bearer token
-        const endpoint = process.env.NEXT_PUBLIC_API_URL?.endsWith('/api') ? '/admin/stats' : '/api/admin/stats';
-        const data = await api.get<AdminStats>(endpoint);
+        // Our api.ts automatically attaches the JWT Bearer token and the /api prefix
+        const data = await api.get<AdminStats>('/admin/stats');
         setStats(data);
       } catch (err: any) {
         setError(err.message || 'Error al cargar estadísticas');

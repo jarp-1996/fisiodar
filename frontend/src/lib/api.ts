@@ -1,4 +1,7 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+let API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+if (API_URL && !API_URL.endsWith('/api')) {
+  API_URL = `${API_URL}/api`;
+}
 
 interface FetchOptions extends RequestInit {
   token?: string;
