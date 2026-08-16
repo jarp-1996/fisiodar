@@ -46,34 +46,34 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative selection:bg-teal-500 selection:text-slate-950">
+    <div className="min-h-screen bg-[#fcfbf9] text-[#2c3e50] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative selection:bg-[#9fb39e] selection:text-white">
       {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#9fb39e]/10 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
         <div className="text-center">
           <Link
             href="/"
-            className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-emerald-500 bg-clip-text text-transparent inline-block"
+            className="text-2xl font-bold text-[#889785] font-[family-name:var(--font-playfair),serif] inline-block"
           >
-            Fisiodar
+            FISIODAR
           </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-slate-100">
-            Crea tu cuenta de paciente
+          <h2 className="mt-6 text-3xl font-extrabold text-[#2c3e50] font-[family-name:var(--font-playfair),serif]">
+            Crea tu cuenta
           </h2>
-          <p className="mt-2 text-sm text-slate-400">
-            ¿Ya tienes una cuenta?{' '}
-            <Link href="/login" className="font-semibold text-teal-400 hover:text-teal-300">
-              Inicia sesión aquí
+          <p className="mt-2 text-sm text-[#5c6e61]">
+            O si ya tienes una,{' '}
+            <Link href="/login" className="font-semibold text-[#9fb39e] hover:text-[#8d9e8c]">
+              inicia sesión aquí
             </Link>
           </p>
         </div>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="bg-slate-900/60 backdrop-blur-md py-8 px-4 border border-slate-800 shadow-xl rounded-2xl sm:px-10">
+        <div className="bg-white py-8 px-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#eae6d8] rounded-2xl sm:px-10">
           {error && (
-            <div className="mb-4 bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm font-medium">
+            <div className="mb-4 bg-red-50 border border-red-100 text-red-600 p-3 rounded-lg text-sm font-medium">
               ⚠️ {error}
             </div>
           )}
@@ -81,7 +81,7 @@ export default function RegisterPage() {
           <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-slate-300">
+                <label htmlFor="firstName" className="block text-sm font-medium text-[#2c3e50]">
                   Nombre *
                 </label>
                 <input
@@ -90,12 +90,12 @@ export default function RegisterPage() {
                   required
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="mt-1 appearance-none block w-full px-3 py-2 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-650 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all"
+                  className="mt-1 appearance-none block w-full px-3 py-2 border border-[#eae6d8] rounded-xl bg-[#fcfbf9] text-[#2c3e50] focus:outline-none focus:ring-2 focus:ring-[#9fb39e] focus:border-transparent text-sm transition-all"
                   placeholder="María"
                 />
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-slate-300">
+                <label htmlFor="lastName" className="block text-sm font-medium text-[#2c3e50]">
                   Apellido *
                 </label>
                 <input
@@ -104,7 +104,7 @@ export default function RegisterPage() {
                   required
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="mt-1 appearance-none block w-full px-3 py-2 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-650 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all"
+                  className="mt-1 appearance-none block w-full px-3 py-2 border border-[#eae6d8] rounded-xl bg-[#fcfbf9] text-[#2c3e50] focus:outline-none focus:ring-2 focus:ring-[#9fb39e] focus:border-transparent text-sm transition-all"
                   placeholder="Gómez"
                 />
               </div>
@@ -112,8 +112,8 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="weight" className="block text-sm font-medium text-slate-300">
-                  Peso (kg) <span className="text-xs text-slate-500">(Opcional)</span>
+                <label htmlFor="weight" className="block text-sm font-medium text-[#2c3e50]">
+                  Peso (kg) <span className="text-xs text-[#5c6e61]">(Opcional)</span>
                 </label>
                 <input
                   id="weight"
@@ -121,12 +121,12 @@ export default function RegisterPage() {
                   step="0.1"
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
-                  className="mt-1 appearance-none block w-full px-3 py-2 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all"
+                  className="mt-1 appearance-none block w-full px-3 py-2 border border-[#eae6d8] rounded-xl bg-[#fcfbf9] text-[#2c3e50] focus:outline-none focus:ring-2 focus:ring-[#9fb39e] focus:border-transparent text-sm transition-all"
                   placeholder="70.5"
                 />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-slate-300">
+                <label htmlFor="phone" className="block text-sm font-medium text-[#2c3e50]">
                   Teléfono / WhatsApp
                 </label>
                 <input
@@ -134,27 +134,27 @@ export default function RegisterPage() {
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="mt-1 appearance-none block w-full px-3 py-2 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all"
+                  className="mt-1 appearance-none block w-full px-3 py-2 border border-[#eae6d8] rounded-xl bg-[#fcfbf9] text-[#2c3e50] focus:outline-none focus:ring-2 focus:ring-[#9fb39e] focus:border-transparent text-sm transition-all"
                   placeholder="958 108 389"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="medicalHistory" className="block text-sm font-medium text-slate-300">
-                Historial Médico Importante <span className="text-xs text-slate-500">(Opcional)</span>
+              <label htmlFor="medicalHistory" className="block text-sm font-medium text-[#2c3e50]">
+                Historial Médico Importante <span className="text-xs text-[#5c6e61]">(Opcional)</span>
               </label>
               <textarea
                 id="medicalHistory"
                 value={medicalHistory}
                 onChange={(e) => setMedicalHistory(e.target.value)}
-                className="mt-1 appearance-none block w-full px-4 py-2 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all h-20 resize-none"
+                className="mt-1 appearance-none block w-full px-3 py-2.5 border border-[#eae6d8] rounded-xl bg-[#fcfbf9] text-[#2c3e50] text-sm focus:outline-none focus:ring-2 focus:ring-[#9fb39e] focus:border-transparent transition-all h-20 resize-none"
                 placeholder="Ej: Hipertensión, operado de rodilla, etc."
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-300">
+              <label htmlFor="email" className="block text-sm font-medium text-[#2c3e50]">
                 Correo Electrónico *
               </label>
               <input
@@ -163,13 +163,13 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 appearance-none block w-full px-4 py-2.5 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-655 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all"
+                className="mt-1 appearance-none block w-full px-4 py-2.5 border border-[#eae6d8] rounded-xl bg-[#fcfbf9] text-[#2c3e50] focus:outline-none focus:ring-2 focus:ring-[#9fb39e] focus:border-transparent text-sm transition-all"
                 placeholder="maria@ejemplo.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-300">
+              <label htmlFor="password" className="block text-sm font-medium text-[#2c3e50]">
                 Contraseña *
               </label>
               <input
@@ -178,7 +178,7 @@ export default function RegisterPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 appearance-none block w-full px-4 py-2.5 border border-slate-800 rounded-xl bg-slate-950 placeholder-slate-650 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-100 text-sm transition-all"
+                className="mt-1 appearance-none block w-full px-4 py-2.5 border border-[#eae6d8] rounded-xl bg-[#fcfbf9] text-[#2c3e50] focus:outline-none focus:ring-2 focus:ring-[#9fb39e] focus:border-transparent text-sm transition-all"
                 placeholder="Mínimo 6 caracteres"
               />
             </div>
@@ -187,16 +187,19 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-slate-950 bg-gradient-to-r from-teal-400 to-emerald-500 hover:from-teal-300 hover:to-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-300 disabled:opacity-50"
+                className="w-full flex justify-center py-3 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-[#9fb39e] hover:bg-[#8d9e8c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#9fb39e] transition-all duration-300 disabled:opacity-50"
               >
-                {loading ? 'Registrando Cuenta...' : 'Registrarme'}
+                {loading ? 'Registrando...' : 'Registrarme'}
               </button>
             </div>
           </form>
 
-          <div className="mt-5 text-center">
-            <Link href="/" className="text-xs text-slate-500 hover:text-slate-400">
-              ← Volver al inicio
+          <div className="mt-6 text-center">
+            <Link
+              href="/login"
+              className="text-sm font-medium text-[#9fb39e] hover:text-[#8d9e8c] transition-colors"
+            >
+              ← Volver al inicio de sesión
             </Link>
           </div>
         </div>
